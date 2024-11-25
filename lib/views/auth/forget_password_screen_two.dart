@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:manjushree/controller/auth/login_controller.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
+import 'package:manjushree/views/auth/confirm_new_pw_screen.dart';
 import 'package:manjushree/widgets/custom/elevated_button.dart';
 
 class ForgetPasswordScreenTwo extends StatelessWidget {
@@ -17,6 +18,7 @@ class ForgetPasswordScreenTwo extends StatelessWidget {
     final List<Color> borderColors = List.generate(4, (_) => Colors.grey);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -64,7 +66,7 @@ class ForgetPasswordScreenTwo extends StatelessWidget {
                               contentPadding: EdgeInsets.zero,
                               counterText: "", // Removes the "0/1" counter
                             ),
-                            keyboardType: TextInputType.number, 
+                            keyboardType: TextInputType.number,
                             maxLength: 1, // Limit to a single digit
                             style: CustomTextStyles.f12W600(),
                           ),
@@ -80,7 +82,7 @@ class ForgetPasswordScreenTwo extends StatelessWidget {
               child: CustomElevatedButton(
                 title: "Verify",
                 onTap: () {
-                  Get.to(() => ForgetPasswordScreenTwo());
+                  Get.to(() => ConfirmNewPwScreen());
                 },
               ),
             ),

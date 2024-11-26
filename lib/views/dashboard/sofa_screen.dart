@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:manjushree/views/dashboard/cart_screen.dart';
 
 import 'package:manjushree/views/dashboard/product_desc_screen.dart';
 
@@ -22,7 +23,7 @@ class Sofa extends StatelessWidget {
               onTap: () {
                 Get.back();
               },
-              child: Icon(Icons.arrow_back)),
+              child: Icon(Icons.keyboard_arrow_left)),
           title: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
@@ -52,8 +53,13 @@ class Sofa extends StatelessWidget {
                       SizedBox(
                         height: 50,
                         width: 50,
-                        child: Image(
-                          image: AssetImage("assets/icons/addtocart.png"),
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(() => CartScreen());
+                          },
+                          child: Image(
+                            image: AssetImage("assets/icons/addtocart.png"),
+                          ),
                         ),
                       ),
                     ],

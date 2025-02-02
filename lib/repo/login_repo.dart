@@ -9,34 +9,48 @@ class LoginRepo {
   static Future<void> login({
     required String email,
     required String password,
-    required Function(User user) onSuccess,
+    required Function(User user, String token) onSuccess,
     required Function(String message) onError,
   }) async {
     try {
+      log("Attempting to log in...");
       var headers = {
         "Accept": "application/json",
       };
       var body = {
         "email": email,
         "password": password,
-        "user_role": "3",
+        "user_type": "customer"
       };
-      http.Response response = await http.post(
-        Uri.parse(Api.loginUrl),
-        headers: headers,
-        body: body,
-      );
+      log("Request body: $body");
+
+      http.Response response = await http.post(Uri.parse(Api.loginUrl),
+          headers: headers, body: body);
+
+      log("Response status: ${response.statusCode}");
       dynamic data = jsonDecode(response.body);
-      if (data["status"] == "success") {
-        User user = User.fromJson(data["data"]);
-        onSuccess(user);
+      log("Response data: $data");
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        if (data["status"] == "success") {
+          String accessToken = data["data"]["token"].toString();
+          User user = User.fromJson(data["data"]);
+          onSuccess(user, accessToken);
+        } else {
+          onError(data["message"] ?? "Unknown error occurred");
+        }
       } else {
-        onError(data["message"]);
+        String errorMessage =
+            data["message"] ?? "Login failed. Please try again.";
+        if (errorMessage.toLowerCase().contains("email")) {
+          errorMessage = "Email is invalid";
+        }
+        onError(errorMessage);
       }
     } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
-      onError("Sorry something went wrong");
+      log("Error: $e");
+      log("Stack trace: $s");
+      onError("Sorry, something went wrong. Please try again later.");
     }
   }
 }

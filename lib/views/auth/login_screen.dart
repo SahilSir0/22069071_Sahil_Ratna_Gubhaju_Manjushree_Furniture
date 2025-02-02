@@ -76,6 +76,7 @@ class LogInScreen extends StatelessWidget {
                         validator: Validators.checkEmailField,
                         controller: c.emailController,
                         textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.none,
                         textInputType: TextInputType.emailAddress,
                       ),
                       const SizedBox(
@@ -87,6 +88,7 @@ class LogInScreen extends StatelessWidget {
                       ),
                       Obx(
                         () => CustomPasswordField(
+                          validator: Validators.checkPasswordField,
                           hint: "Password",
                           eye: c.passwordObscure.value,
                           onEyeClick: c.onEyeCLick,
@@ -102,8 +104,8 @@ class LogInScreen extends StatelessWidget {
                       ),
                       CustomElevatedButton(
                         title: "Login",
-                        onTap: () {
-                          c.onSubmit();
+                        onTap: () {if (c.formKey.currentState!.validate()) {c.onSubmit();}
+                          
                         },
                       ),
                       const SizedBox(

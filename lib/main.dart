@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:manjushree/controller/core_controller.dart';
 import 'package:manjushree/utils/colors.dart';
 import 'package:manjushree/views/splash_screen.dart';
@@ -17,15 +16,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return KhaltiScope(
-        publicKey: "test_public_key_f18b878e02d64e10988f46aea7baa233",
-        builder: (context, navigatorKey) {
-          return GetMaterialApp(
-            navigatorKey: navigatorKey,
-            supportedLocales: const [Locale('en', 'US'), Locale('ne', 'NP')],
-            localizationsDelegates: const [
-              KhaltiLocalizations.delegate,
-            ],
+    return GetMaterialApp(
+           
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: ThemeData(
@@ -38,6 +30,5 @@ class MyApp extends StatelessWidget {
             }),
             home: SplashScreen(),
           );
-        });
   }
 }

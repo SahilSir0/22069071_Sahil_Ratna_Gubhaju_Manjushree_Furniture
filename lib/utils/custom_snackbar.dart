@@ -7,7 +7,7 @@ class CustomSnackBar {
     Get.snackbar(title ?? "Successful", message ?? "The action was successful!",
         snackPosition: SnackPosition.TOP,
         margin: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: AppColors.accept,
         colorText: Colors.white);
   }
 

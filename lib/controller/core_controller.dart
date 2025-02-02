@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:manjushree/utils/storage_keys.dart';
@@ -7,6 +9,7 @@ import '../models/user.dart';
 
 class CoreController extends GetxController {
   Rx<User?> currentUser = Rxn<User>();
+  RxString userToken = "".obs;
 
   @override
   void onInit() async {
@@ -16,6 +19,9 @@ class CoreController extends GetxController {
 
   Future<void> loadCurrentUser() async {
     currentUser.value = StorageHelper.getUser();
+    userToken.value = StorageHelper.getToken();
+    log("current user--------------------- ${currentUser.value?.email}--");
+    log("current user token------------------------${currentUser.value?.token}--");
   }
 
   bool isUserLoggedIn() {

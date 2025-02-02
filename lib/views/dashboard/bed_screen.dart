@@ -76,7 +76,7 @@ class BedScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
-                            Get.to(() => ProductDescScreen());
+                            //Get.to(() => ProductDescScreen());
                           },
                           child: Container(
                               decoration: BoxDecoration(

@@ -85,7 +85,41 @@ class RegisterScreen extends StatelessWidget {
                       height: 15,
                     ),
                     Text(
-                      "Email Address",
+                      "Address",
+                      style: CustomTextStyles.f14W400(),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      preIconPath: Icons.location_on,
+                      hint: "Address",
+                      controller: c.addressController,
+                      textInputAction: TextInputAction.next,
+                      textInputType: TextInputType.name,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      "Phone No.",
+                      style: CustomTextStyles.f14W400(),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      preIconPath: Icons.email,
+                      hint: "Phone",
+                      controller: c.phoneController,
+                      textInputAction: TextInputAction.next,
+                      textInputType: TextInputType.number,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      "Email",
                       style: CustomTextStyles.f14W400(),
                     ),
                     const SizedBox(
@@ -96,26 +130,11 @@ class RegisterScreen extends StatelessWidget {
                       hint: "Email",
                       controller: c.emailController,
                       textInputAction: TextInputAction.next,
+                      textCapitalization: TextCapitalization.none,
                       textInputType: TextInputType.name,
                     ),
                     const SizedBox(
                       height: 15,
-                    ),
-                    Text(
-                      "Date of birth",
-                      style: CustomTextStyles.f14W400(),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    CustomTextField(
-                      readOnly: true,
-                      onTap: () {},
-                      preIconPath: Icons.date_range,
-                      hint: "Date of birth",
-                      controller: c.dobController,
-                      textInputAction: TextInputAction.next,
-                      textInputType: TextInputType.name,
                     ),
                     const SizedBox(
                       height: 15,
@@ -132,26 +151,26 @@ class RegisterScreen extends StatelessWidget {
                         children: [
                           CustomRadioWidget(
                             title: "Male",
-                            value: "Male",
+                            value: "male",
                             groupValue: c.selectedGender.value,
                             onChange: (val) {
-                              c.selectedGender.value = "Male";
+                              c.selectedGender.value = "male";
                             },
                           ),
                           CustomRadioWidget(
                             title: "Female",
-                            value: "Female",
+                            value: "female",
                             groupValue: c.selectedGender.value,
                             onChange: (val) {
-                              c.selectedGender.value = "Female";
+                              c.selectedGender.value = "female";
                             },
                           ),
                           CustomRadioWidget(
                             title: "Others",
-                            value: "Others",
+                            value: "others",
                             groupValue: c.selectedGender.value,
                             onChange: (val) {
-                              c.selectedGender.value = "Others";
+                              c.selectedGender.value = "others";
                             },
                           ),
                         ],
@@ -171,8 +190,27 @@ class RegisterScreen extends StatelessWidget {
                       () => CustomPasswordField(
                         hint: "Password",
                         eye: c.passwordObscure.value,
-                        onEyeClick: c.onEyeCLick,
+                        onEyeClick: c.onEyeCLickPassword,
                         controller: c.passwordController,
+                        textInputAction: TextInputAction.next,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      "Confirm Password",
+                      style: CustomTextStyles.f14W400(),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Obx(
+                      () => CustomPasswordField(
+                        hint: "Confirm Password",
+                        eye: c.confirmpasswordObscure.value,
+                        onEyeClick: c.onEyeCLickConfirm,
+                        controller: c.confirmPassword,
                         textInputAction: TextInputAction.next,
                       ),
                     ),

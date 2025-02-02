@@ -99,26 +99,29 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  children: [
-                    Image(image: AssetImage("assets/icons/time.png")),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        "My Orders",
-                        style: CustomTextStyles.f13W500(),
+              InkWell(
+                onTap: () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    children: [
+                      Image(image: AssetImage("assets/icons/time.png")),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: Text(
+                          "My Orders",
+                          style: CustomTextStyles.f13W500(),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 232.0),
-                      child: Icon(
-                        Icons.keyboard_arrow_right,
-                        color: Colors.red,
-                      ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 232.0),
+                        child: Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.red,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Padding(
@@ -170,26 +173,32 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 15, right: 15),
-                child: Row(
-                  children: [
-                    Image.asset("assets/icons/Logout.png"),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        "Exit",
-                        style: CustomTextStyles.f13W500(),
+              InkWell(
+                onTap: () {
+                  corController.logOut();
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 20.0, top: 15, right: 15),
+                  child: Row(
+                    children: [
+                      Image.asset("assets/icons/Logout.png"),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: Text(
+                          "Exit",
+                          style: CustomTextStyles.f13W500(),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 283.5),
-                      child: Icon(
-                        Icons.keyboard_arrow_right,
-                        color: Colors.red,
-                      ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 283.5),
+                        child: Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.red,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               )
             ],

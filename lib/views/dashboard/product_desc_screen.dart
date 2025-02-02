@@ -1,13 +1,38 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:manjushree/controller/auth/order_controller.dart';
+import 'package:manjushree/models/products.dart';
 import 'package:manjushree/utils/colors.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
+import 'package:manjushree/utils/validatior.dart';
+import 'package:manjushree/views/dashboard/order_detail_screen.dart';
 import 'package:manjushree/widgets/custom/elevated_button.dart';
 
 import '../../widgets/custom/custom_textfield.dart';
 
 class ProductDescScreen extends StatelessWidget {
-  const ProductDescScreen({super.key});
+  ProductDescScreen({super.key, required this.products});
+
+  final Product products;
+  final c = Get.put(OrderScreenController());
+
+  void calculateTotal(double price, int quantity) {
+    double totalAmountCost = price * quantity;
+    print("Total Amount : \$${totalAmountCost}");
+    c.totalAmount.value = totalAmountCost;
+    if (
+        // ignore: unnecessary_null_comparison
+        c.totalAmount.value != null) {
+      Get.to(() => OrderDetailsScreen(
+          totalamount: c.totalAmount.value,
+          quantity: c.quantityController.text,
+          shiftingAddress: c.shippingAddressController.text,
+          products: products));
+    } else {
+      print("Total Amount is null. PLease calculate it First");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +69,33 @@ class ProductDescScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 400,
-                child: Image(
-                  image: AssetImage("assets/common/chair.png"),
+              SizedBox(height: 20),
+              CachedNetworkImage(
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                fit: BoxFit.fill,
+                height: 250,
+                width: 800,
+                imageUrl: products.productImage ?? "",
+                errorWidget: (context, url, error) => Image.asset(
+                  'assets/common/blank-image.jpg',
+                  height: 130,
+                  width: 800,
+                  fit: BoxFit.fill,
                 ),
               ),
+              SizedBox(height: 10),
               Text(
-                "NPR 60000",
+                products.productName ?? "",
                 style: CustomTextStyles.f14W600(),
               ),
               Text(
-                "Single seater Royal Sofa with white premium leather",
-                style: CustomTextStyles.f12W700(),
+                products.description ?? "",
+                style: CustomTextStyles.f12W400(),
+                textAlign: TextAlign.justify,
               ),
+              Text("Quantity: ${products.quantity}"),
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: SizedBox(
@@ -76,7 +114,73 @@ class ProductDescScreen extends StatelessWidget {
                         width: Get.width / 2.3,
                         child: CustomElevatedButton(
                           title: "Buy Now",
-                          onTap: () {},
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (builder) {
+                                  return SingleChildScrollView(
+                                    child: Form(
+                                        key: c.formKey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 25,
+                                              right: 16,
+                                              left: 16,
+                                              bottom: 25),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 18),
+                                              Text("No of people",
+                                                  style: CustomTextStyles
+                                                      .f14W600()),
+                                              const SizedBox(height: 10),
+                                              CustomTextField(
+                                                  controller: c
+                                                      .shippingAddressController,
+                                                  validator: Validators
+                                                      .checkFieldEmpty,
+                                                  hint: "Shipping address",
+                                                  textInputAction:
+                                                      TextInputAction.next,
+                                                  textInputType:
+                                                      TextInputType.text),
+                                              const SizedBox(height: 18),
+                                              CustomTextField(
+                                                  controller:
+                                                      c.quantityController,
+                                                  validator: Validators
+                                                      .checkFieldEmpty,
+                                                  hint: "quantity",
+                                                  textInputAction:
+                                                      TextInputAction.next,
+                                                  textInputType:
+                                                      TextInputType.number),
+                                              const SizedBox(height: 100),
+                                              CustomElevatedButton(
+                                                  title: "Continue",
+                                                  onTap: () {
+                                                    if (products.productPrice !=
+                                                        null) {
+                                                      calculateTotal(
+                                                          double.parse(products
+                                                              .productPrice!),
+                                                          int.parse(c
+                                                              .quantityController
+                                                              .text));
+                                                    } else {
+                                                      // Handle the case when the property price is null
+                                                      print(
+                                                          "Property price is null. Please provide a valid price.");
+                                                    }
+                                                  }),
+                                            ],
+                                          ),
+                                        )),
+                                  );
+                                });
+                          },
                         ),
                       ),
                     ],
@@ -224,108 +328,6 @@ class ProductDescScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.lGrey,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Stack(
-                  children: [
-                    // Main grey container
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.lGrey,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    // White background for the text
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, right: 15, top: 15),
-                          child: Container(
-                            width: 360,
-                            height: 40,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 11.0),
-                            decoration: BoxDecoration(
-                              color: AppColors.extraWhite,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Text(
-                              "Product Description",
-                              style: CustomTextStyles.f12W600(),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, right: 15, top: 15, bottom: 15),
-                          child: Container(
-                            width: 360,
-                            height: 220,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 11.0),
-                            decoration: BoxDecoration(
-                              color: AppColors.extraWhite,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "- something about product",
-                                    style: CustomTextStyles.f10W400(),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "- something about product",
-                                    style: CustomTextStyles.f10W400(),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "- something about product",
-                                    style: CustomTextStyles.f10W400(),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "- something about product",
-                                    style: CustomTextStyles.f10W400(),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "- something about product",
-                                    style: CustomTextStyles.f10W400(),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "- something about product",
-                                    style: CustomTextStyles.f10W400(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
                 ),
               ),
             ],

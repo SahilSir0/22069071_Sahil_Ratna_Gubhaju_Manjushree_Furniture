@@ -10,7 +10,7 @@ import '../../views/dashboard/home_screen.dart';
 class DashScreenController extends GetxController {
   final key = GlobalKey<ScaffoldState>();
   RxList<Widget> pages = RxList(
-    [HomeScreen(), HistoryScreen(), ProfileScreen(), Sofa(), ChairScreen()],
+    [HomeScreen(), HistoryScreen(), ProfileScreen()],
   );
 
   RxInt currentIndex = RxInt(0);

@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:manjushree/controller/auth/order_controller.dart';
+import 'package:manjushree/function/esewa.dart';
 import 'package:manjushree/models/products.dart';
 import 'package:manjushree/widgets/custom/elevated_button.dart';
 
@@ -43,20 +46,20 @@ class PaymentOptionScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Khalti Payment Option
-            Obx(
-              () => ListTile(
-                title: const Text("Khalti"),
-                leading: Radio<String>(
-                  value: 'khalti',
-                  groupValue: c.selectedPayment.value,
-                  onChanged: (value) {
-                    c.updateSelectedPayment(value!);
-                  },
-                ),
-                selected: c.selectedPayment.value == 'khalti',
-              ),
-            ),
-            const SizedBox(height: 20),
+            // Obx(
+            //   () => ListTile(
+            //     title: const Text("Khalti"),
+            //     leading: Radio<String>(
+            //       value: 'khalti',
+            //       groupValue: c.selectedPayment.value,
+            //       onChanged: (value) {
+            //         c.updateSelectedPayment(value!);
+            //       },
+            //     ),
+            //     selected: c.selectedPayment.value == 'khalti',
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
             Obx(
               () => ListTile(
                 title: const Text("eSewa"),
@@ -71,23 +74,23 @@ class PaymentOptionScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // Obx(
+            //   () => ListTile(
+            //     title: const Text("stripe"),
+            //     leading: Radio<String>(
+            //       value: 'stripe',
+            //       groupValue: c.selectedPayment.value,
+            //       onChanged: (value) {
+            //         c.updateSelectedPayment(value!);
+            //       },
+            //     ),
+            //     selected: c.selectedPayment.value == 'stripe',
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
             Obx(
               () => ListTile(
-                title: const Text("stripe"),
-                leading: Radio<String>(
-                  value: 'stripe',
-                  groupValue: c.selectedPayment.value,
-                  onChanged: (value) {
-                    c.updateSelectedPayment(value!);
-                  },
-                ),
-                selected: c.selectedPayment.value == 'stripe',
-              ),
-            ),
-            const SizedBox(height: 20),
-            Obx(
-              () => ListTile(
-                title: const Text("cash"),
+                title: const Text("Cash on Delivery"),
                 leading: Radio<String>(
                   value: 'cash',
                   groupValue: c.selectedPayment.value,
@@ -102,8 +105,20 @@ class PaymentOptionScreen extends StatelessWidget {
             // Complete Purchase Button
             CustomElevatedButton(
               onTap: () {
-                if (c.selectedPayment.value == 'khalti') {
-                  // Start Khalti Payment
+                if (c.selectedPayment.value == 'esewa') {
+                  final esewa = Esewa();
+                  esewa.pay(
+                      productId: product.productId.toString(),
+                      productName: product.productName.toString(),
+                      shippingAddress: shiftingAddress,
+                      totalPrice: totalamount,
+                      quantity: quantity,
+                      amount: totalamount);
+                } else if (c.selectedPayment.value == "cash") {
+                  c.orderProduct(product.productId.toString(), shiftingAddress,
+                      totalamount, quantity, totalamount);
+                } else {
+                  log("Payment Error");
                 }
               },
               title: 'Complete Purchase',

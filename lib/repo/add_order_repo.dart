@@ -10,9 +10,9 @@ class AddOrderRepo {
   static Future<void> addOrderRepo({
     required String productId,
     required String shippingAddress,
-    required int totalPrice,
+    required double totalPrice,
     required String quantity,
-    required int amount,
+    required double amount,
     required String paymentMethod,
     required Function() onSuccess,
     required Function(String message) onError,
@@ -27,9 +27,9 @@ class AddOrderRepo {
         "product_id": productId,
         "token": token,
         "shipping_address": shippingAddress,
-        "total_price": totalPrice,
+        "total_price": totalPrice.toString(),
         "payment_method": paymentMethod,
-        "amount": amount,
+        "amount": amount.toString(),
         "quantity": quantity
       };
       log("$headers");

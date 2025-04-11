@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:manjushree/controller/core_controller.dart';
 import 'package:manjushree/utils/colors.dart';
+import 'package:manjushree/views/dashboard/home_screen.dart';
 import 'package:manjushree/views/splash_screen.dart';
 
 void main() async {
@@ -17,18 +18,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-           
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              colorScheme:
-                  ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
-              useMaterial3: true,
-            ),
-            initialBinding: BindingsBuilder(() {
-              Get.put(CoreController());
-            }),
-            home: SplashScreen(),
-          );
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+        useMaterial3: true,
+      ),
+      initialBinding: BindingsBuilder(() {
+        Get.put(CoreController());
+      }),
+      home: SplashScreen(),
+    );
   }
 }

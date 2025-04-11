@@ -271,7 +271,7 @@ class HomeScreen extends StatelessWidget {
     }
   }
 }
-
+      
 class RecommendationWidget extends StatelessWidget {
   const RecommendationWidget({
     super.key,

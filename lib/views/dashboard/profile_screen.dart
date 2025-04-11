@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:manjushree/controller/core_controller.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
+import 'package:manjushree/views/dashboard/edit_profile.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const routeName = '/profile_screen';
@@ -35,10 +37,26 @@ class ProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(15.0),
                   child: Row(
                     children: [
-                      Image(
-                          image: AssetImage(
-                        "assets/icons/male.png",
-                      )),
+                      Obx(
+                        () => ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                corController.currentUser.value?.image ?? "",
+                            fit: BoxFit.cover,
+                            height: 100,
+                            width: 100,
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Image.network(
+                              "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
+                              fit: BoxFit.cover,
+                              height: 100,
+                              width: 100,
+                            ),
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(
                             top: 0.0, left: 15, right: 15),
@@ -47,7 +65,7 @@ class ProfileScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Sahil Ratna Gubhaju",
+                              corController.currentUser.value!.name.toString(),
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -55,7 +73,15 @@ class ProfileScreen extends StatelessWidget {
                                   color: Colors.white),
                             ),
                             Text(
-                              "sahilgubhaju392@gmail.com",
+                              corController.currentUser.value!.email.toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "Poppins",
+                                  fontSize: 12),
+                            ),
+                            Text(
+                              corController.currentUser.value!.phoneNumber
+                                  .toString(),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: "Poppins",
@@ -84,9 +110,14 @@ class ProfileScreen extends StatelessWidget {
                     Image(image: AssetImage("assets/icons/Customer.png")),
                     Padding(
                       padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        "Profile Settings",
-                        style: CustomTextStyles.f13W500(),
+                      child: InkWell(
+                        onTap: () {
+                          Get.to(() => EditProfileScreen());
+                        },
+                        child: Text(
+                          "Profile Settings",
+                          style: CustomTextStyles.f13W500(),
+                        ),
                       ),
                     ),
                     Padding(

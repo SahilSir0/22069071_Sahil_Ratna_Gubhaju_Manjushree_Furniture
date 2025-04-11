@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:manjushree/views/dashboard/chair_screen.dart';
 import 'package:manjushree/views/dashboard/history_screen.dart';
 import 'package:manjushree/views/dashboard/profile_screen.dart';
-import 'package:manjushree/views/dashboard/sofa_screen.dart';
 
 import '../../views/dashboard/home_screen.dart';
 

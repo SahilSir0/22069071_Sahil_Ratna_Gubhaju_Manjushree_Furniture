@@ -19,8 +19,8 @@ class OrderScreenController extends GetxController {
   final paymentMethod = 'khalti'.obs;
   RxBool loading = RxBool(false);
 
-  orderProduct(String productId, String shippingAddress, int totalPrice,
-      String quantity, int amount) async {
+  orderProduct(String productId, String shippingAddress, double totalPrice,
+      String quantity, double amount) async {
     loading.value = true;
     await AddOrderRepo.addOrderRepo(
         productId: productId,

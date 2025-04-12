@@ -6,6 +6,7 @@ import 'package:manjushree/controller/dashboard/products_controller.dart';
 import 'package:manjushree/models/categories.dart';
 import 'package:manjushree/models/products.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
+import 'package:manjushree/views/dashboard/cart_screen.dart';
 import 'package:manjushree/views/dashboard/product_desc_screen.dart';
 import 'package:manjushree/views/dashboard/profile_screen.dart';
 
@@ -73,11 +74,49 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.only(top: 0.0, left: 15, right: 15),
           child: Column(
             children: [
-              CustomTextField(
-                suffixIconPath: Icons.search,
-                hint: "search",
-                textInputAction: TextInputAction.next,
-                textInputType: TextInputType.text,
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTextField(
+                      suffixIconPath: Icons.search,
+                      hint: "Search",
+                      textInputAction: TextInputAction.next,
+                      textInputType: TextInputType.text,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  InkWell(
+                    onTap: () {
+                      // Navigate to the CartScreen when implemented
+                      Get.to(() => CartScreen());
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.shopping_cart,
+                              color: Colors.white),
+                        ),
+                        // Optional: Badge indicator
+                        // Positioned(
+                        //   right: 0,
+                        //   child: Container(
+                        //     padding: EdgeInsets.all(2),
+                        //     decoration: BoxDecoration(
+                        //       color: Colors.red,
+                        //       shape: BoxShape.circle,
+                        //     ),
+                        //     child: Text("2", style: TextStyle(fontSize: 10, color: Colors.white)),
+                        //   ),
+                        // )
+                      ],
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20), // Spacing before slider
 
@@ -133,66 +172,6 @@ class HomeScreen extends StatelessWidget {
                       ),
               ),
 
-              // SingleChildScrollView(
-              //   scrollDirection: Axis.horizontal,
-              //   child: Row(
-              //     children: [
-              //       InkWell(
-              //           onTap: () {
-              //             Get.to(() => Sofa());
-              //           },
-              //           child: const CategoryButton(
-              //               name: "Sofa", icon: "assets/icons/sofa.png")),
-              //       const SizedBox(width: 7),
-              //       InkWell(
-              //         onTap: () {
-              //           Get.to(() => TableScreen());
-              //         },
-              //         child: const CategoryButton(
-              //             name: "Table", icon: "assets/icons/table.png"),
-              //       ),
-              //       const SizedBox(width: 7),
-              //       InkWell(
-              //           onTap: () {
-              //             Get.to(() => BedScreen());
-              //           },
-              //           child: const CategoryButton(
-              //               name: "Bed", icon: "assets/icons/bed.png")),
-              //       const SizedBox(width: 7),
-              //       InkWell(
-              //         onTap: () {
-              //           Get.to(() => DiningScreen());
-              //         },
-              //         child: const CategoryButton(
-              //             name: "Dinning", icon: "assets/icons/dining.png"),
-              //       ),
-              //       const SizedBox(width: 7),
-              //       InkWell(
-              //         onTap: () {
-              //           Get.to(() => WardrobeScreen());
-              //         },
-              //         child: const CategoryButton(
-              //             name: "Wardrobe", icon: "assets/icons/wardrobe.png"),
-              //       ),
-              //       const SizedBox(width: 7),
-              //       InkWell(
-              //         onTap: () {
-              //           Get.to(() => ChairScreen());
-              //         },
-              //         child: const CategoryButton(
-              //             name: "Chair", icon: "assets/icons/chair.png"),
-              //       ),
-              //       const SizedBox(width: 7),
-              //       InkWell(
-              //         onTap: () {
-              //           Get.to(() => CabinetScreen());
-              //         },
-              //         child: const CategoryButton(
-              //             name: "Cabinets", icon: "assets/icons/cabinet.png"),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               SizedBox(
                 height: 40,
                 child: Row(
@@ -271,7 +250,7 @@ class HomeScreen extends StatelessWidget {
     }
   }
 }
-      
+
 class RecommendationWidget extends StatelessWidget {
   const RecommendationWidget({
     super.key,

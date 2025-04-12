@@ -2,7 +2,7 @@ List<Categories> categoriesFromJsom(List<dynamic> categoriesItemJson) =>
     List<Categories>.from(categoriesItemJson
         .map((categoriesItemJson) => Categories.fromJson(categoriesItemJson)));
 
-class Categories {
+class Categories {   
   String? id;
   String? name;
   String? image;

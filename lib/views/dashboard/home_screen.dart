@@ -7,6 +7,7 @@ import 'package:manjushree/models/categories.dart';
 import 'package:manjushree/models/products.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
 import 'package:manjushree/views/dashboard/cart_screen.dart';
+import 'package:manjushree/views/dashboard/chat_bot_screen.dart';
 import 'package:manjushree/views/dashboard/product_desc_screen.dart';
 import 'package:manjushree/views/dashboard/profile_screen.dart';
 
@@ -30,6 +31,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: 100,
         backgroundColor: AppColors.extraWhite,
         centerTitle: false,
@@ -123,9 +125,10 @@ class HomeScreen extends StatelessWidget {
               // Carousel Slider widget
               CarouselSlider(
                 options: CarouselOptions(
-                  height: 150.0,
+                  height: 180.0,
                   autoPlay: true,
                   enlargeCenterPage: true,
+
                   aspectRatio: 2.0, // Aspect ratio adjustment
                   autoPlayInterval: Duration(seconds: 3),
                   autoPlayAnimationDuration: Duration(milliseconds: 800),
@@ -133,7 +136,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 items: imgList.map((item) {
                   return Container(
-                    margin: EdgeInsets.all(5.0),
+                    margin: EdgeInsets.all(0.0),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(10.0),
@@ -225,7 +228,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: InkWell(
         onTap: () {
-          Get.to(() => ProfileScreen());
+          Get.to(() => ChatBotScreen());
         },
         child: Container(
           child: Image(

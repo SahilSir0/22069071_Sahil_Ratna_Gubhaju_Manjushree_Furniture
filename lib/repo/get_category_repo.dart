@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-
 import 'package:http/http.dart' as http;
 import 'package:manjushree/models/categories.dart';
 import 'package:manjushree/utils/apis.dart';

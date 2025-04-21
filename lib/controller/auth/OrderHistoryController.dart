@@ -2,27 +2,24 @@ import 'package:get/get.dart';
 import 'package:manjushree/models/Order.dart';
 import 'package:manjushree/repo/order_history_repo.dart';
 
-final orderHistoryController = Get.put(OrderHistoryController());
-
 class OrderHistoryController extends GetxController {
-  var orderList = <OrderModel>[].obs;
-  var isLoading = false.obs;
+  RxList<OrderDetails> allOrderDetails = <OrderDetails>[].obs;
 
+  final loading = RxBool(false);
   @override
   void onInit() {
+    getAllOrders();
     super.onInit();
-    loadOrderHistory();
   }
 
-  void loadOrderHistory() async {
-    try {
-      isLoading.value = true;
-      final orders = await OrderHistoryRepo.fetchOrderHistory();
-      orderList.assignAll(orders);
-    } catch (e) {
-      print("Error loading order history: $e");
-    } finally {
-      isLoading.value = false;
-    }
+  getAllOrders() async {
+    loading.value = true;
+    await GetOrderRepo.getOrderRepo(onSuccess: (orders) {
+      loading.value = false;
+
+      allOrderDetails.addAll(orders);
+    }, onError: ((message) {
+      loading.value = false;
+    }));
   }
 }

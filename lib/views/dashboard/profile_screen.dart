@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:manjushree/controller/core_controller.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
 import 'package:manjushree/views/dashboard/edit_profile.dart';
+import 'package:manjushree/views/dashboard/history_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const routeName = '/profile_screen';
@@ -13,228 +14,147 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        automaticallyImplyLeading: false,
+        title: const Text(
+          "Profile",
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
           children: [
-            const Text("Profile",
-                style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+            // Profile Card
+            Container(
+              margin: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
+              width: screenWidth * 0.9,
+              height: 180,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  Obx(
+                    () => Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: corController.currentUser.value?.image != null
+                              ? NetworkImage(
+                                  corController.currentUser.value!.image!)
+                              : const NetworkImage(
+                                  "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg"),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  SizedBox(
+                    width: screenWidth * 0.5,
+                    child: Obx(
+                      () => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            corController.currentUser.value!.name.toString(),
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Poppins",
+                                color: Colors.white),
+                          ),
+                          Text(
+                            corController.currentUser.value!.email.toString(),
+                            style: const TextStyle(
+                                fontSize: 12,
+                                fontFamily: "Poppins",
+                                color: Colors.white),
+                          ),
+                          Text(
+                            corController.currentUser.value!.phoneNumber
+                                .toString(),
+                            style: const TextStyle(
+                                fontSize: 12,
+                                fontFamily: "Poppins",
+                                color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+
             const SizedBox(height: 20),
+
+            // Profile Options
+            profileItem(
+              icon: "assets/icons/Customer.png",
+              label: "Profile Settings",
+              onTap: () => Get.to(() => EditProfileScreen()),
+            ),
+            profileItem(
+              icon: "assets/icons/time.png",
+              label: "My Orders",
+              onTap: () => Get.to(() => HistoryScreen()),
+            ),
+            profileItem(
+              iconWidget:
+                  const Icon(Icons.info_outline, size: 28, color: Colors.red),
+              label: "About Us",
+              onTap: () {},
+            ),
+            profileItem(
+              icon: "assets/icons/Vector.png",
+              label: "To review",
+              onTap: () {},
+            ),
+            profileItem(
+              icon: "assets/icons/Logout.png",
+              label: "Exit",
+              onTap: () => corController.logOut(),
+            ),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Center(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
-                    children: [
-                      Obx(
-                        () => ClipRRect(
-                          borderRadius: BorderRadius.circular(60),
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                corController.currentUser.value?.image ?? "",
-                            fit: BoxFit.cover,
-                            height: 100,
-                            width: 100,
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => Image.network(
-                              "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
-                              fit: BoxFit.cover,
-                              height: 100,
-                              width: 100,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 0.0, left: 15, right: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              corController.currentUser.value!.name.toString(),
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Poppins",
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              corController.currentUser.value!.email.toString(),
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Poppins",
-                                  fontSize: 12),
-                            ),
-                            Text(
-                              corController.currentUser.value!.phoneNumber
-                                  .toString(),
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Poppins",
-                                  fontSize: 12),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+    );
+  }
+
+  Widget profileItem({
+    String? icon,
+    Widget? iconWidget,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 18.0),
+        child: Row(
+          children: [
+            iconWidget ??
+                Image.asset(
+                  icon ?? "",
+                  height: 24,
+                  width: 24,
                 ),
-                decoration: BoxDecoration(
-                    color: Colors.red, borderRadius: BorderRadius.circular(20)),
-                height: 180,
-                width: 380,
-              ),
-            ),
-          ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 15.0, right: 15, top: 50, bottom: 15),
-                child: Row(
-                  children: [
-                    Image(image: AssetImage("assets/icons/Customer.png")),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: InkWell(
-                        onTap: () {
-                          Get.to(() => EditProfileScreen());
-                        },
-                        child: Text(
-                          "Profile Settings",
-                          style: CustomTextStyles.f13W500(),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 198.0),
-                      child: Icon(
-                        Icons.keyboard_arrow_right,
-                        color: Colors.red,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
-                    children: [
-                      Image(image: AssetImage("assets/icons/time.png")),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          "My Orders",
-                          style: CustomTextStyles.f13W500(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 232.0),
-                        child: Icon(
-                          Icons.keyboard_arrow_right,
-                          color: Colors.red,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      size: 28,
-                      color: Colors.red,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        "About Us",
-                        style: CustomTextStyles.f13W500(),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 243.6),
-                      child: Icon(
-                        Icons.keyboard_arrow_right,
-                        color: Colors.red,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 20.0, top: 15, right: 15, bottom: 15),
-                child: Row(
-                  children: [
-                    Image.asset("assets/icons/Vector.png"),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        "To review",
-                        style: CustomTextStyles.f13W500(),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 242.1),
-                      child: Icon(
-                        Icons.keyboard_arrow_right,
-                        color: Colors.red,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  corController.logOut();
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20.0, top: 15, right: 15),
-                  child: Row(
-                    children: [
-                      Image.asset("assets/icons/Logout.png"),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          "Exit",
-                          style: CustomTextStyles.f13W500(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 283.5),
-                        child: Icon(
-                          Icons.keyboard_arrow_right,
-                          color: Colors.red,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ],
+            const SizedBox(width: 20),
+            Text(label, style: CustomTextStyles.f13W500()),
+            const Spacer(),
+            const Icon(Icons.keyboard_arrow_right, color: Colors.red),
+          ],
+        ),
       ),
     );
   }

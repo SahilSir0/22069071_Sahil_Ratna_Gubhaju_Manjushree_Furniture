@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:manjushree/controller/auth/CartController.dart';
 import 'package:manjushree/controller/auth/order_controller.dart';
 import 'package:manjushree/models/products.dart';
 import 'package:manjushree/utils/colors.dart';
@@ -8,8 +9,9 @@ import 'package:manjushree/utils/custom_text_style.dart';
 import 'package:manjushree/utils/validatior.dart';
 import 'package:manjushree/views/dashboard/order_detail_screen.dart';
 import 'package:manjushree/widgets/custom/elevated_button.dart';
-
 import '../../widgets/custom/custom_textfield.dart';
+
+final cartController = Get.find<CartController>();
 
 class ProductDescScreen extends StatelessWidget {
   ProductDescScreen({super.key, required this.products});
@@ -21,16 +23,14 @@ class ProductDescScreen extends StatelessWidget {
     double totalAmountCost = price * quantity;
     print("Total Amount : \$${totalAmountCost}");
     c.totalAmount.value = totalAmountCost;
-    if (
-        // ignore: unnecessary_null_comparison
-        c.totalAmount.value != null) {
+    if (c.totalAmount.value != null) {
       Get.to(() => OrderDetailsScreen(
           totalamount: c.totalAmount.value,
           quantity: c.quantityController.text,
           shiftingAddress: c.shippingAddressController.text,
           products: products));
     } else {
-      print("Total Amount is null. PLease calculate it First");
+      print("Total Amount is null. Please calculate it First");
     }
   }
 
@@ -45,293 +45,262 @@ class ProductDescScreen extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 320,
-                        child: CustomTextField(
-                          suffixIconPath: Icons.search,
-                          hint: "search",
-                          textInputAction: TextInputAction.next,
-                          textInputType: TextInputType.text,
-                        ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 320,
+                      child: CustomTextField(
+                        suffixIconPath: Icons.search,
+                        hint: "search",
+                        textInputAction: TextInputAction.next,
+                        textInputType: TextInputType.text,
                       ),
-                      SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: Image(
-                          image: AssetImage("assets/icons/addtocart.png"),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: Image.asset("assets/icons/addtocart.png"),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               CachedNetworkImage(
                 placeholder: (context, url) => const Center(
                   child: CircularProgressIndicator(),
                 ),
                 fit: BoxFit.fill,
                 height: 250,
-                width: 800,
+                width: double.infinity,
                 imageUrl: products.productImage ?? "",
                 errorWidget: (context, url, error) => Image.asset(
                   'assets/common/blank-image.jpg',
                   height: 130,
-                  width: 800,
+                  width: double.infinity,
                   fit: BoxFit.fill,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 products.productName ?? "",
                 style: CustomTextStyles.f14W600(),
               ),
               Text(
-                products.description ?? "",
+                products.productDescription ?? "",
                 style: CustomTextStyles.f12W400(),
                 textAlign: TextAlign.justify,
               ),
-              Text("Quantity: ${products.quantity}"),
+              Text("Quantity: ${products.productQuantity}"),
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
-                child: SizedBox(
-                  width: 500,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: Get.width / 2.3,
-                        child: CustomElevatedButton(
-                          title: "Add to cart",
-                          onTap: () {},
-                        ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: Get.width / 2.3,
+                      child: CustomElevatedButton(
+                        title: "Add to cart",
+                        onTap: () {
+                          cartController.addToCart(products);
+                        },
                       ),
-                      SizedBox(
-                        width: Get.width / 2.3,
-                        child: CustomElevatedButton(
-                          title: "Buy Now",
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (builder) {
-                                  return SingleChildScrollView(
-                                    child: Form(
-                                        key: c.formKey,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 25,
-                                              right: 16,
-                                              left: 16,
-                                              bottom: 25),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(height: 18),
-                                              Text("No of people",
-                                                  style: CustomTextStyles
-                                                      .f14W600()),
-                                              const SizedBox(height: 10),
-                                              CustomTextField(
-                                                  controller: c
-                                                      .shippingAddressController,
-                                                  validator: Validators
-                                                      .checkFieldEmpty,
-                                                  hint: "Shipping address",
-                                                  textInputAction:
-                                                      TextInputAction.next,
-                                                  textInputType:
-                                                      TextInputType.text),
-                                              const SizedBox(height: 18),
-                                              CustomTextField(
-                                                  controller:
-                                                      c.quantityController,
-                                                  validator: Validators
-                                                      .checkFieldEmpty,
-                                                  hint: "quantity",
-                                                  textInputAction:
-                                                      TextInputAction.next,
-                                                  textInputType:
-                                                      TextInputType.number),
-                                              const SizedBox(height: 100),
-                                              CustomElevatedButton(
-                                                  title: "Continue",
-                                                  onTap: () {
-                                                    if (products.productPrice !=
-                                                        null) {
-                                                      calculateTotal(
-                                                          double.parse(products
-                                                              .productPrice!),
-                                                          int.parse(c
-                                                              .quantityController
-                                                              .text));
-                                                    } else {
-                                                      // Handle the case when the property price is null
-                                                      print(
-                                                          "Property price is null. Please provide a valid price.");
-                                                    }
-                                                  }),
-                                            ],
+                    ),
+                    SizedBox(
+                      width: Get.width / 2.3,
+                      child: CustomElevatedButton(
+                        title: "Buy Now",
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20)),
+                            ),
+                            builder: (context) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Form(
+                                    key: c.formKey,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Center(
+                                            child: Container(
+                                              width: 40,
+                                              height: 5,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
                                           ),
-                                        )),
-                                  );
-                                });
-                          },
-                        ),
+                                          const SizedBox(height: 15),
+                                          Center(
+                                            child: Text(
+                                              "Order Details",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black87,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Text(
+                                            "Shipping Address",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 6),
+                                          CustomTextField(
+                                            controller:
+                                                c.shippingAddressController,
+                                            validator:
+                                                Validators.checkFieldEmpty,
+                                            hint: "Enter your address",
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            textInputType: TextInputType.text,
+                                          ),
+                                          const SizedBox(height: 15),
+                                          Text(
+                                            "Quantity",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 6),
+                                          CustomTextField(
+                                            controller: c.quantityController,
+                                            validator:
+                                                Validators.checkFieldEmpty,
+                                            hint: "e.g. 2",
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            textInputType: TextInputType.number,
+                                          ),
+                                          const SizedBox(height: 25),
+                                          Divider(
+                                              thickness: 0.8,
+                                              color: Colors.grey[300]),
+                                          const SizedBox(height: 10),
+                                          CustomElevatedButton(
+                                            title: "Continue",
+                                            onTap: () {
+                                              if (products.productPrice !=
+                                                  null) {
+                                                calculateTotal(
+                                                  double.parse(
+                                                      products.productPrice!),
+                                                  int.parse(c
+                                                      .quantityController.text),
+                                                );
+                                              } else {
+                                                print("Product price is null.");
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0, bottom: 15),
-                child: Container(
-                  height: 270,
-                  width: Get.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: AppColors.lGrey,
-                  ),
-                  child: Stack(
-                    children: [
-                      // Main grey container
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.lGrey,
-                            borderRadius: BorderRadius.circular(20),
+              const SizedBox(height: 20),
+              Container(
+                height: 270,
+                width: Get.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: AppColors.lGrey,
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 15),
+                      child: Container(
+                        width: 360,
+                        height: 40,
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.extraWhite,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Ratings & Reviews",
+                            style: CustomTextStyles.f12W600(),
                           ),
                         ),
                       ),
-                      // White background for the text
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15.0, right: 15, top: 15),
-                            child: Container(
-                              width: 360,
-                              height: 40,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0, vertical: 11.0),
-                              decoration: BoxDecoration(
-                                color: AppColors.extraWhite,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Text(
-                                "Ratings & Reviews",
-                                style: CustomTextStyles.f12W600(),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Container(
-                              width: 350.6,
-                              height: 80,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0, vertical: 11.0),
-                              decoration: BoxDecoration(
-                                color: AppColors.extraWhite,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Image(
-                                    image:
-                                        AssetImage("assets/icons/Profile.png"),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10.0),
-                                        child: Text(
-                                          "Jonathan Kaminga",
-                                          style: CustomTextStyles.f12W300(),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10.0, right: 0.6),
-                                        child: SizedBox(
-                                          width: 300,
-                                          child: Text(
-                                            "Product is product is product is product is product is product is  product is product is product",
-                                            style: CustomTextStyles.f10W400(),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(right: 15.0, left: 15),
-                            child: Container(
-                              width: 350.6,
-                              height: 80,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0, vertical: 11.0),
-                              decoration: BoxDecoration(
-                                color: AppColors.extraWhite,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Image(
-                                    image:
-                                        AssetImage("assets/icons/Profile.png"),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10.0),
-                                        child: Text(
-                                          "Jonathan Kaminga",
-                                          style: CustomTextStyles.f12W300(),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10.0, right: 0.6),
-                                        child: SizedBox(
-                                          width: 300,
-                                          child: Text(
-                                            "Product is product is product is product is product is product is  product is product is product",
-                                            style: CustomTextStyles.f10W400(),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                    _reviewTile(),
+                    _reviewTile(),
+                  ],
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _reviewTile() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      child: Container(
+        width: 350.6,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppColors.extraWhite,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset("assets/icons/Profile.png", height: 40, width: 40),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Jonathan Kaminga", style: CustomTextStyles.f12W300()),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Product is product is product is product is product is product is  product is product is product",
+                    style: CustomTextStyles.f10W400(),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

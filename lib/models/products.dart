@@ -6,55 +6,45 @@ class Product {
   String? productId;
   String? productName;
   String? productPrice;
-  String? quantity;
+  String? productQuantity;
+  String? productDescription;
   String? productImage;
-  String? description;
   String? productCreatedAt;
   String? categoryId;
   String? categoryName;
-  String? productSkuId;
-  String? skuSize;
-  String? skuCode;
-  String? reviewId;
-  String? reviewComment;
-  String? reviewRating;
-  String? reviewDate;
+  String? totalSold;
+  List<Skus>? skus;
 
   Product(
       {this.productId,
       this.productName,
       this.productPrice,
-      this.quantity,
+      this.productQuantity,
+      this.productDescription,
       this.productImage,
-      this.description,
       this.productCreatedAt,
       this.categoryId,
       this.categoryName,
-      this.productSkuId,
-      this.skuSize,
-      this.skuCode,
-      this.reviewId,
-      this.reviewComment,
-      this.reviewRating,
-      this.reviewDate});
+      this.totalSold,
+      this.skus});
 
   Product.fromJson(Map<String, dynamic> json) {
     productId = json['product_id'];
     productName = json['product_name'];
     productPrice = json['product_price'];
-    quantity = json['quantity'];
+    productQuantity = json['product_quantity'];
+    productDescription = json['product_description'];
     productImage = json['product_image'];
-    description = json['description'];
     productCreatedAt = json['product_created_at'];
     categoryId = json['category_id'];
     categoryName = json['category_name'];
-    productSkuId = json['product_sku_id'];
-    skuSize = json['sku_size'];
-    skuCode = json['sku_code'];
-    reviewId = json['review_id'];
-    reviewComment = json['review_comment'];
-    reviewRating = json['review_rating'];
-    reviewDate = json['review_date'];
+    totalSold = json['total_sold'];
+    if (json['skus'] != null) {
+      skus = <Skus>[];
+      json['skus'].forEach((v) {
+        skus!.add(new Skus.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -62,19 +52,38 @@ class Product {
     data['product_id'] = this.productId;
     data['product_name'] = this.productName;
     data['product_price'] = this.productPrice;
-    data['quantity'] = this.quantity;
+    data['product_quantity'] = this.productQuantity;
+    data['product_description'] = this.productDescription;
     data['product_image'] = this.productImage;
-    data['description'] = this.description;
     data['product_created_at'] = this.productCreatedAt;
     data['category_id'] = this.categoryId;
     data['category_name'] = this.categoryName;
+    data['total_sold'] = this.totalSold;
+    if (this.skus != null) {
+      data['skus'] = this.skus!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Skus {
+  String? productSkuId;
+  String? skuSize;
+  String? skuCode;
+
+  Skus({this.productSkuId, this.skuSize, this.skuCode});
+
+  Skus.fromJson(Map<String, dynamic> json) {
+    productSkuId = json['product_sku_id'];
+    skuSize = json['sku_size'];
+    skuCode = json['sku_code'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['product_sku_id'] = this.productSkuId;
     data['sku_size'] = this.skuSize;
     data['sku_code'] = this.skuCode;
-    data['review_id'] = this.reviewId;
-    data['review_comment'] = this.reviewComment;
-    data['review_rating'] = this.reviewRating;
-    data['review_date'] = this.reviewDate;
     return data;
   }
 }

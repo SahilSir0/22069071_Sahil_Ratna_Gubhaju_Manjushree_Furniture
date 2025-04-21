@@ -12,6 +12,8 @@ class ImagePath {
   static const String placeholder = "$baseImagePath/placeholder.gif";
 
   static const String logoOnly = "$baseImagePath/placeholder.png";
+  static const String chatbot = "$baseImagePath/chatbot.png";
+
 
   static const esewa = "assets/icons/eshewa.png";
   static const khalti = "assets/icons/khalti.png";

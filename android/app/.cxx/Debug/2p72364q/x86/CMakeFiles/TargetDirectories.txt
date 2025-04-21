@@ -1,0 +1,2 @@
+C:/xampp/htdocs/manjushree/android/app/.cxx/Debug/2p72364q/x86/CMakeFiles/edit_cache.dir
+C:/xampp/htdocs/manjushree/android/app/.cxx/Debug/2p72364q/x86/CMakeFiles/rebuild_cache.dir

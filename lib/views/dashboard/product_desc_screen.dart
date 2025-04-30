@@ -25,10 +25,13 @@ class ProductDescScreen extends StatelessWidget {
     c.totalAmount.value = totalAmountCost;
     if (c.totalAmount.value != null) {
       Get.to(() => OrderDetailsScreen(
-          totalamount: c.totalAmount.value,
-          quantity: c.quantityController.text,
-          shiftingAddress: c.shippingAddressController.text,
-          products: products));
+            totalamount: c.totalAmount.value,
+            quantity: c.quantityController.text,
+            shiftingAddress: c.shippingAddressController.text,
+            productName: products.productName.toString(),
+            productId: products.productId.toString(),
+            productPrice: products.productPrice.toString(),
+          ));
     } else {
       print("Total Amount is null. Please calculate it First");
     }
@@ -37,35 +40,15 @@ class ProductDescScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Product Description"),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 320,
-                      child: CustomTextField(
-                        suffixIconPath: Icons.search,
-                        hint: "search",
-                        textInputAction: TextInputAction.next,
-                        textInputType: TextInputType.text,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: Image.asset("assets/icons/addtocart.png"),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
               CachedNetworkImage(
                 placeholder: (context, url) => const Center(
                   child: CircularProgressIndicator(),
@@ -92,6 +75,7 @@ class ProductDescScreen extends StatelessWidget {
                 textAlign: TextAlign.justify,
               ),
               Text("Quantity: ${products.productQuantity}"),
+              Text("Price: ${products.productPrice}"),
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: Row(
@@ -99,12 +83,108 @@ class ProductDescScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: Get.width / 2.3,
-                      child: CustomElevatedButton(
-                        title: "Add to cart",
-                        onTap: () {
-                          cartController.addToCart(products);
-                        },
-                      ),
+                        child: CustomElevatedButton(
+                          title: "Add to cart",
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
+                              ),
+                              builder: (context) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom:
+                                        MediaQuery.of(context).viewInsets.bottom,
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Form(
+                                      key: c.formKey,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Center(
+                                              child: Container(
+                                                width: 40,
+                                                height: 5,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[300],
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 15),
+                                            Center(
+                                              child: Text(
+                                                "Order Details",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black87,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 20),
+                                            Text(
+                                              "Quantity",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey[700],
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 6),
+                                            CustomTextField(
+                                              controller: c.quantityController,
+                                              validator:
+                                                  Validators.checkFieldEmpty,
+                                              hint: "e.g. 2",
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              textInputType: TextInputType.number,
+                                            ),
+                                            const SizedBox(height: 25),
+                                            Divider(
+                                                thickness: 0.8,
+                                                color: Colors.grey[300]),
+                                            const SizedBox(height: 10),
+                                            CustomElevatedButton(
+                                              title: "Add to Cart",
+                                              onTap: () {
+                                                Get.back();
+                                                if (products.skus != null &&
+                                                    products.skus!.isNotEmpty) {
+                                                  cartController.addToCart(
+                                                    products.productId.toString(),
+                                                    products
+                                                        .skus!.first.productSkuId
+                                                        .toString(),
+                                                    c.quantityController.text,
+                                                  );
+                                                } else {
+                                                  // Handle the case where SKU is missing
+                                                  Get.snackbar("Error",
+                                                      "No SKU found for this product");
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
                     ),
                     SizedBox(
                       width: Get.width / 2.3,

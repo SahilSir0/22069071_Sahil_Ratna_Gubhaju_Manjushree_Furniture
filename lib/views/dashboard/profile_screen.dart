@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:manjushree/controller/core_controller.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
+import 'package:manjushree/views/auth/about_screen.dart';
 import 'package:manjushree/views/dashboard/edit_profile.dart';
 import 'package:manjushree/views/dashboard/history_screen.dart';
 
@@ -113,13 +114,9 @@ class ProfileScreen extends StatelessWidget {
               iconWidget:
                   const Icon(Icons.info_outline, size: 28, color: Colors.red),
               label: "About Us",
-              onTap: () {},
+              onTap: () => Get.to(AboutUsScreen()),
             ),
-            profileItem(
-              icon: "assets/icons/Vector.png",
-              label: "To review",
-              onTap: () {},
-            ),
+
             profileItem(
               icon: "assets/icons/Logout.png",
               label: "Exit",

@@ -78,8 +78,8 @@ class CustomTextField extends StatelessWidget {
             : null,
         fillColor: fillColor ?? Colors.transparent,
         filled: fillColor != null,
-        prefixIcon: Icon(preIconPath),
-        suffixIcon: Icon(suffixIconPath),
+        // prefixIcon: Icon(preIconPath),
+        // suffixIcon: Icon(suffixIconPath),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
               width: 1, color: border ?? AppColors.secondaryTextColor),
@@ -101,9 +101,9 @@ class CustomTextField extends StatelessWidget {
             : const TextStyle(fontSize: 0),
         hintText: hint,
         hintStyle:
-            CustomTextStyles.f16W400(color: AppColors.secondaryTextColor),
+            CustomTextStyles.f14W400(color: AppColors.secondaryTextColor),
       ),
-      style: CustomTextStyles.f16W400(
+      style: CustomTextStyles.f14W400(
           color: (readOnly ?? false) ? AppColors.secondaryTextColor : null),
     );
   }

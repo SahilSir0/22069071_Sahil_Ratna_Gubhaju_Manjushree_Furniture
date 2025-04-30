@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:manjushree/models/products.dart';
 import 'package:manjushree/utils/colors.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
 import 'package:manjushree/views/dashboard/payment_option_screen.dart';
 import 'package:manjushree/widgets/custom/elevated_button.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
-  OrderDetailsScreen(
-      {super.key,
-      required this.totalamount,
-      required this.quantity,
-      required this.shiftingAddress,
-      required this.products});
-  final Product products;
+  OrderDetailsScreen({
+    super.key,
+    required this.totalamount,
+    required this.quantity,
+    required this.shiftingAddress,
+    required this.productName,
+    required this.productId,
+    required this.productPrice,
+  });
   final double totalamount;
   final String quantity;
   final String shiftingAddress;
+  final String productName;
+  final String productId;
+  final String productPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +44,9 @@ class OrderDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Product: ${products.productName}",
-                style: TextStyle(fontSize: 16)),
+            Text("Product: ${productName}", style: TextStyle(fontSize: 16)),
             SizedBox(height: 20),
-            Text("Price: ${products.productPrice}",
-                style: TextStyle(fontSize: 16)),
+            Text("Price: ${productPrice}", style: TextStyle(fontSize: 16)),
             SizedBox(height: 20),
             Text("Quantity: ${quantity}",
                 style: TextStyle(
@@ -62,10 +64,11 @@ class OrderDetailsScreen extends StatelessWidget {
               title: "Proceed to Payment",
               onTap: () {
                 Get.to(() => PaymentOptionScreen(
-                      product: products,
                       totalamount: totalamount,
                       quantity: quantity,
                       shiftingAddress: shiftingAddress,
+                      productId: productId,
+                      productName: productName,
                     ));
               },
             ),

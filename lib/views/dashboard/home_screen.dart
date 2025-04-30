@@ -2,14 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:manjushree/controller/dashboard/products_controller.dart';
 import 'package:manjushree/models/categories.dart';
 import 'package:manjushree/models/products.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
 import 'package:manjushree/views/dashboard/cart_screen.dart';
 import 'package:manjushree/views/dashboard/chat_bot_screen.dart';
+import 'package:manjushree/views/dashboard/filter_product_screen.dart';
 import 'package:manjushree/views/dashboard/product_desc_screen.dart';
-import 'package:manjushree/views/dashboard/profile_screen.dart';
+import 'package:manjushree/views/dashboard/product_screen.dart';
 
 import 'package:manjushree/widgets/custom/custom_textfield.dart';
 import '../../controller/dashboard/home_screen_controller.dart';
@@ -18,7 +20,9 @@ import '../../utils/colors.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final c = Get.put(HomeScreenController());
+  final HomeScreenController c = Get.put(HomeScreenController());
+  final productController = Get.put(ProductsController());
+
   final product = Get.put(ProductsController());
   final List<String> imgList = [
     'assets/common/1.png',
@@ -57,14 +61,24 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 50.0, top: 10),
-                    child: SizedBox(
-                      width: 50,
-                      height: 100,
-                      child: Image.network(
-                          "https://cdn-icons-png.flaticon.com/512/219/219983.png"),
-                    ),
-                  )
+                    padding: const EdgeInsets.only(left: 30.0),
+                    child: Obx(() {
+                      final imageUrl = c.avatarUrl.value;
+
+                      if (imageUrl != null && imageUrl.isNotEmpty) {
+                        return CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(imageUrl),
+                        );
+                      } else {
+                        return CircleAvatar(
+                          radius: 30,
+                          backgroundImage:
+                              AssetImage('assets/images/default_avatar.png'),
+                        );
+                      }
+                    }),
+                  ),
                 ],
               ),
             ],
@@ -82,8 +96,13 @@ class HomeScreen extends StatelessWidget {
                     child: CustomTextField(
                       suffixIconPath: Icons.search,
                       hint: "Search",
-                      textInputAction: TextInputAction.next,
+                      textInputAction: TextInputAction.search,
                       textInputType: TextInputType.text,
+                      onSubmitted: (query) {
+                        if (query.trim().isNotEmpty) {
+                          Get.to(() => ProductListPage(category: query.trim()));
+                        }
+                      },
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -103,18 +122,6 @@ class HomeScreen extends StatelessWidget {
                           child: const Icon(Icons.shopping_cart,
                               color: Colors.white),
                         ),
-                        // Optional: Badge indicator
-                        // Positioned(
-                        //   right: 0,
-                        //   child: Container(
-                        //     padding: EdgeInsets.all(2),
-                        //     decoration: BoxDecoration(
-                        //       color: Colors.red,
-                        //       shape: BoxShape.circle,
-                        //     ),
-                        //     child: Text("2", style: TextStyle(fontSize: 10, color: Colors.white)),
-                        //   ),
-                        // )
                       ],
                     ),
                   ),
@@ -184,16 +191,6 @@ class HomeScreen extends StatelessWidget {
                       "Recommended for you",
                       style: CustomTextStyles.f12W600(),
                     ),
-                    InkWell(
-                      child: Text(
-                        "View all",
-                        style: CustomTextStyles.f10W300(),
-                        selectionColor: Colors.red,
-                      ),
-                      onTap: () {
-                        Get.to(ProfileScreen());
-                      },
-                    )
                   ],
                 ),
               ),
@@ -339,7 +336,8 @@ class CategoryButton extends StatelessWidget {
     return Row(
       children: [
         InkWell(
-          onTap: () {},
+          onTap: () =>
+              Get.to(() => ProductListPage(category: categories.name ?? "")),
           child: Container(
             padding: EdgeInsets.only(left: 10, right: 10),
             height: 40,

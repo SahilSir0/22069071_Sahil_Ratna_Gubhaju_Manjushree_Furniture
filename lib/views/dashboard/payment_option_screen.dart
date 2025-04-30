@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:manjushree/controller/auth/order_controller.dart';
 import 'package:manjushree/function/esewa.dart';
-import 'package:manjushree/models/products.dart';
 import 'package:manjushree/widgets/custom/elevated_button.dart';
 
 class PaymentOptionScreen extends StatelessWidget {
@@ -13,14 +12,16 @@ class PaymentOptionScreen extends StatelessWidget {
   final double totalamount;
   final String quantity;
   final String shiftingAddress;
-  final Product product;
+  final String productId;
+  final String productName;
 
   PaymentOptionScreen({
     Key? key,
     required this.totalamount,
     required this.quantity,
     required this.shiftingAddress,
-    required this.product,
+    required this.productId,
+    required this.productName,
   }) : super(key: key);
 
   @override
@@ -35,7 +36,7 @@ class PaymentOptionScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Total Price: ${product.productPrice}",
+              "Total Price: ${productName}",
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 20),
@@ -108,15 +109,15 @@ class PaymentOptionScreen extends StatelessWidget {
                 if (c.selectedPayment.value == 'esewa') {
                   final esewa = Esewa();
                   esewa.pay(
-                      productId: product.productId.toString(),
-                      productName: product.productName.toString(),
+                      productId: productId,
+                      productName: productName,
                       shippingAddress: shiftingAddress,
                       totalPrice: totalamount,
                       quantity: quantity,
                       amount: totalamount);
                 } else if (c.selectedPayment.value == "cash") {
-                  c.orderProduct(product.productId.toString(), shiftingAddress,
-                      totalamount, quantity, totalamount);
+                  c.orderProduct(productId, shiftingAddress, totalamount,
+                      quantity, totalamount);
                 } else {
                   log("Payment Error");
                 }

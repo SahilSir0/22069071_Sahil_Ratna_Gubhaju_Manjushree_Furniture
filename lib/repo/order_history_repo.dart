@@ -6,6 +6,9 @@ import 'package:manjushree/controller/core_controller.dart';
 import 'package:manjushree/models/Order.dart';
 import 'package:manjushree/utils/apis.dart';
 
+List<OrderDetails> ordersFromJson(dynamic json) {
+  return List<OrderDetails>.from(json.map((x) => OrderDetails.fromJson(x)));
+}
 
 class GetOrderRepo {
   static Future<void> getOrderRepo({

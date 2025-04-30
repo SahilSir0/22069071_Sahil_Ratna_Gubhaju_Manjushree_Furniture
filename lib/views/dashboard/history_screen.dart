@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:manjushree/controller/auth/OrderHistoryController.dart';
+import 'package:manjushree/controller/auth/order_controller.dart';
 import 'package:manjushree/models/Order.dart';
 import 'package:manjushree/utils/colors.dart';
 import 'package:manjushree/utils/custom_text_style.dart';
 
 class HistoryScreen extends StatelessWidget {
   HistoryScreen({super.key});
-  final c = Get.put(OrderHistoryController());
+  final c = Get.put(OrderScreenController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,24 +31,30 @@ class HistoryScreen extends StatelessWidget {
           style: CustomTextStyles.f14W600(color: AppColors.textColor),
         ),
       ),
-      body: Obx(() => (c.loading.value)
-          ? const Center(child: CircularProgressIndicator())
-          : c.allOrderDetails.isEmpty
-              ? Center(
-                  child: Text(
-                  "Order history",
-                  style:
-                      CustomTextStyles.f12W400(color: AppColors.textGreyColor),
-                ))
-              : Container(
-                  child: ListView.builder(
-                      itemCount: c.allOrderDetails.length,
-                      itemBuilder: (context, index) {
-                        OrderDetails orders = c.allOrderDetails[index];
+      body: RefreshIndicator(
+        onRefresh: () async {
+          c.allOrderDetails.clear();
+          c.getAllOrders();
+        },
+        child: Obx(() => (c.loading.value)
+            ? const Center(child: CircularProgressIndicator())
+            : c.allOrderDetails.isEmpty
+                ? Center(
+                    child: Text(
+                    "Order history",
+                    style: CustomTextStyles.f12W400(
+                        color: AppColors.textGreyColor),
+                  ))
+                : Container(
+                    child: ListView.builder(
+                        itemCount: c.allOrderDetails.length,
+                        itemBuilder: (context, index) {
+                          OrderDetails orders = c.allOrderDetails[index];
 
-                        return OrderHistoryCard(order: orders);
-                      }),
-                )),
+                          return OrderHistoryCard(order: orders);
+                        }),
+                  )),
+      ),
     );
   }
 }
